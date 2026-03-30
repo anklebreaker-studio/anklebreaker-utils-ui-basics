@@ -10,11 +10,11 @@ namespace AnkleBreaker.Utils.UIBasics
     /// Fires UnityEvents so visual feedback (tweens, animations, etc.) can be wired
     /// from the inspector without any hard dependency.
     /// </summary>
-    public class SwitchButton : ABButton, ISelectable
+    public class UISwitchButton : ABButton, IUISwitch
     {
         // ──────────────────────────── Settings ────────────────────────────
 
-        [SectionHeader("SwitchButton")]
+        [SectionHeader("UISwitchButton")]
         [SerializeField] private bool _switchOnClick = true;
         public bool SwitchOnClick { get => _switchOnClick; set => _switchOnClick = value; }
 
