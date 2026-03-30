@@ -1,0 +1,19 @@
+{
+  "name": "com.anklebreaker-studio.utils.ui-basics",
+  "version": "0.1.0",
+  "displayName": "AnkleBreaker Studio - Utils UI Basics",
+  "description": "Reusable UI Toolkit components, USS utilities, and UI helpers for rapid Unity UI development. Part of the AnkleBreaker Utils split.",
+  "unity": "2022.3",
+  "type": "library",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/AnkleBreaker-Studio/AnkleBreaker-Utils-UI-Basics.git",
+    "type": "git"
+  },
+  "author": {
+    "name": "AnkleBreaker Studio",
+    "email": "contact@anklebreaker-studio.com",
+    "url": "https://www.anklebreaker-studio.com"
+  },
+  "dependencies": {}
+}

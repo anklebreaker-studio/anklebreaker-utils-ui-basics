@@ -1,0 +1,18 @@
+{
+    "name": "AnkleBreaker.Utils.UIBasics.Editor",
+    "rootNamespace": "AnkleBreaker.Utils.UIBasics.Editor",
+    "references": [
+        "AnkleBreaker.Utils.UIBasics"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
