@@ -15,7 +15,6 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
     /// Extends Unity's ButtonEditor to preserve the standard Button inspector
     /// (transitions, navigation, onClick) and appends our custom fields
     /// with full AB attribute support (FoldoutGroup, ShowInInspector, [Button], etc.).
-    /// SectionHeader is handled automatically by its DecoratorDrawer via PropertyField.
     /// </summary>
     [CustomEditor(typeof(ButtonBase), true)]
     [CanEditMultipleObjects]
@@ -31,6 +30,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
         private const BindingFlags MemberFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
+        private List<SerializedProperty> _customProperties;
         private List<ButtonMethodInfo> _buttonMethods;
         private List<ShowInInspectorEntry> _showInInspectorEntries;
 
@@ -42,6 +42,20 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             base.OnEnable();
             _buttonMethods = ButtonDrawerUtility.CollectButtonMethods(target);
             _showInInspectorEntries = CollectShowInInspector(target);
+            CacheCustomProperties();
+        }
+
+        private void CacheCustomProperties()
+        {
+            _customProperties = new List<SerializedProperty>();
+            SerializedProperty prop = serializedObject.GetIterator();
+            if (!prop.NextVisible(true)) return;
+            do
+            {
+                if (!BaseButtonProperties.Contains(prop.name))
+                    _customProperties.Add(prop.Copy());
+            }
+            while (prop.NextVisible(false));
         }
 
         public override void OnInspectorGUI()
@@ -49,15 +63,16 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             // --- Unity's standard Button inspector ---
             base.OnInspectorGUI();
 
+            if (_customProperties == null || _customProperties.Count == 0)
+                return;
+
             // --- Our custom properties ---
             serializedObject.Update();
 
-            var entries = CollectCustomPropertyEntries();
-            if (entries.Count > 0)
-            {
-                EditorGUILayout.Space(6);
-                DrawCustomEntries(entries);
-            }
+            EditorGUILayout.Space(6);
+
+            var entries = BuildEntries();
+            DrawEntries(entries);
 
             serializedObject.ApplyModifiedProperties();
 
@@ -68,7 +83,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             ButtonDrawerUtility.DrawButtons(_buttonMethods, targets);
         }
 
-        #region Custom Property Collection
+        #region Entry Building & Drawing
 
         private struct PropertyEntry
         {
@@ -80,24 +95,21 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             public int OriginalIndex;
         }
 
-        private List<PropertyEntry> CollectCustomPropertyEntries()
+        private List<PropertyEntry> BuildEntries()
         {
             var entries = new List<PropertyEntry>();
             Type targetType = target.GetType();
 
-            SerializedProperty prop = serializedObject.GetIterator();
-            if (!prop.NextVisible(true)) return entries;
-
-            do
+            for (int i = 0; i < _customProperties.Count; i++)
             {
-                if (BaseButtonProperties.Contains(prop.name))
-                    continue;
-
+                var prop = _customProperties[i];
                 FieldInfo field = FindField(targetType, prop.name);
+
                 var entry = new PropertyEntry
                 {
-                    Property = prop.Copy(),
+                    Property = prop,
                     Order = 0,
+                    OriginalIndex = i,
                 };
 
                 if (field != null)
@@ -115,10 +127,8 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                     if (order != null) entry.Order = order.Order;
                 }
 
-                entry.OriginalIndex = entries.Count;
                 entries.Add(entry);
             }
-            while (prop.NextVisible(false));
 
             entries.Sort((a, b) =>
             {
@@ -129,22 +139,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             return entries;
         }
 
-        private static FieldInfo FindField(Type type, string fieldName)
-        {
-            while (type != null)
-            {
-                FieldInfo field = type.GetField(fieldName, MemberFlags);
-                if (field != null) return field;
-                type = type.BaseType;
-            }
-            return null;
-        }
-
-        #endregion
-
-        #region Drawing
-
-        private void DrawCustomEntries(List<PropertyEntry> entries)
+        private void DrawEntries(List<PropertyEntry> entries)
         {
             string currentFoldout = null;
 
@@ -152,7 +147,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             {
                 var entry = entries[i];
 
-                // Foldout transitions
+                // Foldout group transitions
                 if (entry.FoldoutGroup != currentFoldout)
                 {
                     if (currentFoldout != null) EndFoldout(currentFoldout);
@@ -165,6 +160,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                             continue;
                         }
                     }
+
                     currentFoldout = entry.FoldoutGroup;
                 }
                 else if (currentFoldout != null)
@@ -174,11 +170,21 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                         continue;
                 }
 
-                // PropertyField handles DecoratorDrawers (SectionHeader, etc.) automatically
                 EditorGUILayout.PropertyField(entry.Property, true);
             }
 
             if (currentFoldout != null) EndFoldout(currentFoldout);
+        }
+
+        private static FieldInfo FindField(Type type, string fieldName)
+        {
+            while (type != null)
+            {
+                FieldInfo field = type.GetField(fieldName, MemberFlags);
+                if (field != null) return field;
+                type = type.BaseType;
+            }
+            return null;
         }
 
         #endregion

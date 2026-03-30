@@ -8,27 +8,27 @@ namespace AnkleBreaker.Utils.UIBasics
 {
     /// <summary>
     /// Base button that exposes UI.Button selection state transitions
-    /// via both C# events (Action) and UnityEvents for inspector wiring.
+    /// via C# event and per-state UnityEvents for inspector wiring.
     /// </summary>
     public class ButtonBase : Button
     {
-        [Serializable]
-        public class StateChangedUnityEvent : UnityEvent<ESelectionState, ESelectionState> { }
+        [FoldoutGroup("State Events", Style = FoldoutGroupStyle.Line)]
+        [SerializeField] private UnityEvent _onNormal = new UnityEvent();
 
-        [FoldoutGroup("Button Events", Style = FoldoutGroupStyle.Line)]
-        [SerializeField] private StateChangedUnityEvent _onStateChangedEvent = new StateChangedUnityEvent();
+        [FoldoutGroup("State Events")]
+        [SerializeField] private UnityEvent _onHighlighted = new UnityEvent();
 
-        [FoldoutGroup("Button Events")]
-        [SerializeField] private UnityEvent _onClickEvent = new UnityEvent();
+        [FoldoutGroup("State Events")]
+        [SerializeField] private UnityEvent _onPressed = new UnityEvent();
+
+        [FoldoutGroup("State Events")]
+        [SerializeField] private UnityEvent _onSelected = new UnityEvent();
+
+        [FoldoutGroup("State Events")]
+        [SerializeField] private UnityEvent _onDisabled = new UnityEvent();
 
         /// <summary>C# event fired on every state transition (prevState, newState).</summary>
         public event Action<ESelectionState, ESelectionState> OnStateChanged;
-
-        /// <summary>Inspector-wirable event fired on every state transition.</summary>
-        public StateChangedUnityEvent OnStateChangedEvent => _onStateChangedEvent;
-
-        /// <summary>Inspector-wirable click event (supplements Button.onClick).</summary>
-        public UnityEvent OnClickEvent => _onClickEvent;
 
         /// <summary>The selection state before the last transition.</summary>
         [ShowInInspector(RuntimeOnly = true)]
@@ -38,29 +38,26 @@ namespace AnkleBreaker.Utils.UIBasics
         [ShowInInspector(RuntimeOnly = true)]
         public ESelectionState CurrentState => (ESelectionState)currentSelectionState;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            onClick.AddListener(HandleClick);
-        }
-
-        protected override void OnDestroy()
-        {
-            onClick.RemoveListener(HandleClick);
-            base.OnDestroy();
-        }
-
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
             base.DoStateTransition(state, instant);
 
             ESelectionState newState = (ESelectionState)state;
-            ESelectionState prevState = PrevState;
-
-            OnStateChanged?.Invoke(prevState, newState);
-            _onStateChangedEvent?.Invoke(prevState, newState);
-
+            OnStateChanged?.Invoke(PrevState, newState);
+            InvokeStateEvent(newState);
             PrevState = newState;
+        }
+
+        private void InvokeStateEvent(ESelectionState state)
+        {
+            switch (state)
+            {
+                case ESelectionState.Normal:      _onNormal?.Invoke(); break;
+                case ESelectionState.Highlighted:  _onHighlighted?.Invoke(); break;
+                case ESelectionState.Pressed:      _onPressed?.Invoke(); break;
+                case ESelectionState.Selected:     _onSelected?.Invoke(); break;
+                case ESelectionState.Disabled:     _onDisabled?.Invoke(); break;
+            }
         }
 
         /// <summary>
@@ -68,10 +65,16 @@ namespace AnkleBreaker.Utils.UIBasics
         /// </summary>
         protected virtual void OnBtnClick() { }
 
-        private void HandleClick()
+        protected override void Awake()
         {
-            OnBtnClick();
-            _onClickEvent?.Invoke();
+            base.Awake();
+            onClick.AddListener(OnBtnClick);
+        }
+
+        protected override void OnDestroy()
+        {
+            onClick.RemoveListener(OnBtnClick);
+            base.OnDestroy();
         }
 
         /// <summary>
