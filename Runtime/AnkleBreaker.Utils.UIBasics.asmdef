@@ -1,7 +1,9 @@
 {
     "name": "AnkleBreaker.Utils.UIBasics",
     "rootNamespace": "AnkleBreaker.Utils.UIBasics",
-    "references": [],
+    "references": [
+        "AnkleBreaker.Utils.Inspector"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
