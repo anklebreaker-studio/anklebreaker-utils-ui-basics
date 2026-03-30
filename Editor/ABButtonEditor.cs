@@ -11,14 +11,14 @@ using AnkleBreaker.Utils.Inspector.Editor;
 namespace AnkleBreaker.Utils.UIBasics.Editor
 {
     /// <summary>
-    /// Custom editor for ButtonBase and all subclasses.
+    /// Custom editor for ABButton and all subclasses.
     /// Extends Unity's ButtonEditor to preserve the standard Button inspector
     /// (transitions, navigation, onClick) and appends our custom fields
     /// with full AB attribute support (FoldoutGroup, ShowInInspector, [Button], etc.).
     /// </summary>
-    [CustomEditor(typeof(ButtonBase), true)]
+    [CustomEditor(typeof(ABButton), true)]
     [CanEditMultipleObjects]
-    public class ButtonBaseEditor : ButtonEditor
+    public class ABButtonEditor : ButtonEditor
     {
         private static readonly HashSet<string> BaseButtonProperties = new HashSet<string>
         {
@@ -170,6 +170,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                         continue;
                 }
 
+                // PropertyField handles DecoratorDrawers (SectionHeader, etc.) automatically
                 EditorGUILayout.PropertyField(entry.Property, true);
             }
 

@@ -10,8 +10,9 @@ namespace AnkleBreaker.Utils.UIBasics
     /// Base button that exposes UI.Button selection state transitions
     /// via C# event and per-state UnityEvents for inspector wiring.
     /// </summary>
-    public class ButtonBase : Button
+    public class ABButton : Button
     {
+        [SectionHeader("ABButton")]
         [FoldoutGroup("State Events", Style = FoldoutGroupStyle.Line)]
         [SerializeField] private UnityEvent _onNormal = new UnityEvent();
 
