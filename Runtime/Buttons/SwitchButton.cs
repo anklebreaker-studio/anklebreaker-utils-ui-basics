@@ -14,7 +14,7 @@ namespace AnkleBreaker.Utils.UIBasics
     {
         // ──────────────────────────── Settings ────────────────────────────
 
-        [SectionHeader("Switch Settings")]
+        [SectionHeader("SwitchButton")]
         [SerializeField] private bool _switchOnClick = true;
         public bool SwitchOnClick { get => _switchOnClick; set => _switchOnClick = value; }
 

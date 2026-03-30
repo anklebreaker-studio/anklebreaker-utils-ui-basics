@@ -12,20 +12,19 @@ namespace AnkleBreaker.Utils.UIBasics
     /// </summary>
     public class ABButton : Button
     {
-        [SectionHeader("ABButton")]
-        [FoldoutGroup("State Events", Style = FoldoutGroupStyle.Line)]
+        [FoldoutGroup("ABButton - Events", FoldoutGroupStyle.CenterLine)]
         [SerializeField] private UnityEvent _onNormal = new UnityEvent();
 
-        [FoldoutGroup("State Events")]
+        [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onHighlighted = new UnityEvent();
 
-        [FoldoutGroup("State Events")]
+        [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onPressed = new UnityEvent();
 
-        [FoldoutGroup("State Events")]
+        [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onSelected = new UnityEvent();
 
-        [FoldoutGroup("State Events")]
+        [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onDisabled = new UnityEvent();
 
         /// <summary>C# event fired on every state transition (prevState, newState).</summary>
