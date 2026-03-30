@@ -14,7 +14,8 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
     /// Custom editor for ButtonBase and all subclasses.
     /// Extends Unity's ButtonEditor to preserve the standard Button inspector
     /// (transitions, navigation, onClick) and appends our custom fields
-    /// with full AB attribute support (FoldoutGroup, SectionHeader, ShowInInspector, etc.).
+    /// with full AB attribute support (FoldoutGroup, ShowInInspector, [Button], etc.).
+    /// SectionHeader is handled automatically by its DecoratorDrawer via PropertyField.
     /// </summary>
     [CustomEditor(typeof(ButtonBase), true)]
     [CanEditMultipleObjects]
@@ -75,9 +76,6 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             public string FoldoutGroup;
             public FoldoutGroupStyle FoldoutStyle;
             public Color? FoldoutColor;
-            public string SectionHeaderTitle;
-            public SectionHeaderStyle SectionHeaderStyle;
-            public Color? SectionHeaderColor;
             public int Order;
             public int OriginalIndex;
         }
@@ -111,16 +109,6 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                         entry.FoldoutStyle = foldout.Style;
                         if (foldout.HasCustomColor)
                             entry.FoldoutColor = new Color(foldout.R, foldout.G, foldout.B);
-                    }
-
-                    var section = field.GetCustomAttribute<SectionHeaderAttribute>();
-                    if (section != null)
-                    {
-                        entry.SectionHeaderTitle = section.Title;
-                        entry.SectionHeaderStyle = section.Style;
-                        if (section.HasCustomColor)
-                            entry.SectionHeaderColor =
-                                new Color(section.R, section.G, section.B);
                     }
 
                     var order = field.GetCustomAttribute<PropertyOrderAttribute>();
@@ -164,14 +152,6 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             {
                 var entry = entries[i];
 
-                // SectionHeader
-                if (entry.SectionHeaderTitle != null)
-                {
-                    if (currentFoldout != null) { EndFoldout(currentFoldout); currentFoldout = null; }
-                    SectionHeaderDrawer.DrawManualSectionHeader(
-                        entry.SectionHeaderTitle, entry.SectionHeaderStyle, entry.SectionHeaderColor);
-                }
-
                 // Foldout transitions
                 if (entry.FoldoutGroup != currentFoldout)
                 {
@@ -194,6 +174,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                         continue;
                 }
 
+                // PropertyField handles DecoratorDrawers (SectionHeader, etc.) automatically
                 EditorGUILayout.PropertyField(entry.Property, true);
             }
 
