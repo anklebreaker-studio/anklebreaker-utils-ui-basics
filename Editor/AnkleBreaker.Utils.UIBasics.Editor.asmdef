@@ -2,7 +2,9 @@
     "name": "AnkleBreaker.Utils.UIBasics.Editor",
     "rootNamespace": "AnkleBreaker.Utils.UIBasics.Editor",
     "references": [
-        "AnkleBreaker.Utils.UIBasics"
+        "AnkleBreaker.Utils.UIBasics",
+        "AnkleBreaker.Utils.Inspector",
+        "AnkleBreaker.Utils.Inspector.Editor"
     ],
     "includePlatforms": [
         "Editor"
