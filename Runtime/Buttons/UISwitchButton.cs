@@ -33,15 +33,6 @@ namespace AnkleBreaker.Utils.UIBasics
         [FoldoutGroup("Switch Events")]
         [SerializeField] private UnityEvent<bool> _onSwitchChanged = new UnityEvent<bool>();
 
-        /// <summary>Inspector-wirable event fired when the button switches on.</summary>
-        public UnityEvent OnSwitchedOnEvent => _onSwitchedOn;
-
-        /// <summary>Inspector-wirable event fired when the button switches off.</summary>
-        public UnityEvent OnSwitchedOffEvent => _onSwitchedOff;
-
-        /// <summary>Inspector-wirable event fired on every switch change (true = on).</summary>
-        public UnityEvent<bool> OnSwitchChangedEvent => _onSwitchChanged;
-
         /// <summary>C# event fired on every switch change (true = on).</summary>
         public event Action<bool> OnSwitchValueChanged;
 
