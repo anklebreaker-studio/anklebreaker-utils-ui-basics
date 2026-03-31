@@ -58,7 +58,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             while (prop.NextVisible(false));
         }
 
-        private const string ButtonFoldoutTitle = "Button";
+        private const string ButtonFoldoutTitle = "Unity Button";
         private const FoldoutGroupStyle ButtonFoldoutStyle = FoldoutGroupStyle.CenterLine;
 
         public override void OnInspectorGUI()
