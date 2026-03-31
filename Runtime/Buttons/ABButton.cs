@@ -111,7 +111,6 @@ namespace AnkleBreaker.Utils.UIBasics
             img.sprite = null;
             img.color = new Color(1f, 1f, 1f, 0f);
             img.raycastTarget = true;
-            targetGraphic = img;
         }
 #endif
 
