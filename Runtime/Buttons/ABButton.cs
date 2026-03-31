@@ -23,9 +23,6 @@ namespace AnkleBreaker.Utils.UIBasics
         [SerializeField] private UnityEvent _onUnhover = new UnityEvent();
 
         [FoldoutGroup("ABButton - Events")]
-        [SerializeField] private UnityEvent _onPressed = new UnityEvent();
-
-        [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onSelected = new UnityEvent();
 
         [FoldoutGroup("ABButton - Events")]
@@ -84,7 +81,7 @@ namespace AnkleBreaker.Utils.UIBasics
             {
                 case ESelectionState.Normal:      _onNormal?.Invoke(); break;
                 case ESelectionState.Highlighted:  break; // Hover tracked independently via OnPointerEnter/Exit
-                case ESelectionState.Pressed:      _onPressed?.Invoke(); break;
+                case ESelectionState.Pressed:      break; // onClick handles press
                 case ESelectionState.Selected:     _onSelected?.Invoke(); break;
                 case ESelectionState.Disabled:     _onDisabled?.Invoke(); break;
             }
