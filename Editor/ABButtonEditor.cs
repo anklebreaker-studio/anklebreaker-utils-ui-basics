@@ -58,10 +58,17 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             while (prop.NextVisible(false));
         }
 
+        private const string ButtonFoldoutTitle = "Button";
+        private const FoldoutGroupStyle ButtonFoldoutStyle = FoldoutGroupStyle.CenterLine;
+
         public override void OnInspectorGUI()
         {
-            // --- Unity's standard Button inspector ---
-            base.OnInspectorGUI();
+            // --- Unity's standard Button inspector inside a foldout ---
+            if (BeginFoldout(ButtonFoldoutTitle, ButtonFoldoutStyle, null))
+            {
+                base.OnInspectorGUI();
+            }
+            EndFoldout(ButtonFoldoutTitle);
 
             if (_customProperties == null || _customProperties.Count == 0)
                 return;
@@ -195,7 +202,7 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
         private bool BeginFoldout(string title, FoldoutGroupStyle style, Color? color)
         {
             string key = target.GetType().FullName + "_foldout_" + title;
-            if (!FoldoutStates.ContainsKey(key)) FoldoutStates[key] = true;
+            if (!FoldoutStates.ContainsKey(key)) FoldoutStates[key] = false;
 
             switch (style)
             {
