@@ -30,25 +30,26 @@ namespace AnkleBreaker.Utils.UIBasics
         /// <summary>C# event fired on every state transition (prevState, newState).</summary>
         public event Action<ESelectionState, ESelectionState> OnStateChanged;
 
+        private ESelectionState _currentState = ESelectionState.Normal;
+
         /// <summary>The selection state before the last transition.</summary>
         [ShowInInspector(RuntimeOnly = true)]
         public ESelectionState PrevState { get; private set; }
 
         /// <summary>The current selection state.</summary>
         [ShowInInspector(RuntimeOnly = true)]
-        public ESelectionState CurrentState => (ESelectionState)currentSelectionState;
+        public ESelectionState CurrentState => _currentState;
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
-            ESelectionState prev = CurrentState;
-
             base.DoStateTransition(state, instant);
 
             ESelectionState newState = (ESelectionState)state;
-            if (prev == newState) return;
+            if (_currentState == newState) return;
 
-            PrevState = prev;
-            OnStateChanged?.Invoke(prev, newState);
+            PrevState = _currentState;
+            _currentState = newState;
+            OnStateChanged?.Invoke(PrevState, newState);
             InvokeStateEvent(newState);
         }
 
