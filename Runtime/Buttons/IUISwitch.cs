@@ -1,12 +1,12 @@
 namespace AnkleBreaker.Utils.UIBasics
 {
     /// <summary>
-    /// Contract for UI elements that support a selected / deselected toggle state.
+    /// Contract for UI elements that support an on/off toggle state.
     /// </summary>
     public interface IUISwitch
     {
-        bool IsSelected { get; }
+        bool IsOn { get; }
 
-        void SetIsSelected(bool selected);
+        void SetIsOn(bool on);
     }
 }

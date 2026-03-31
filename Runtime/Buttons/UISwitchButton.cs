@@ -6,7 +6,7 @@ using AnkleBreaker.Utils.Inspector;
 namespace AnkleBreaker.Utils.UIBasics
 {
     /// <summary>
-    /// A toggle-style button that switches between selected / deselected states.
+    /// A toggle-style button that switches between on / off states.
     /// Fires UnityEvents so visual feedback (tweens, animations, etc.) can be wired
     /// from the inspector without any hard dependency.
     /// </summary>
@@ -19,71 +19,71 @@ namespace AnkleBreaker.Utils.UIBasics
         public bool SwitchOnClick { get => _switchOnClick; set => _switchOnClick = value; }
 
         [SerializeField, LabelText("Toggle Object")]
-        [ABToolTip("Optional GameObject activated when selected, deactivated when deselected.")]
-        private GameObject _objToToggleOnSelection;
+        [ABToolTip("Optional GameObject activated when on, deactivated when off.")]
+        private GameObject _objToToggleOnSwitch;
 
         // ──────────────────────────── Events ──────────────────────────────
 
         [FoldoutGroup("Switch Events", Style = FoldoutGroupStyle.Line)]
-        [SerializeField] private UnityEvent _onSelected = new UnityEvent();
+        [SerializeField] private UnityEvent _onSwitchedOn = new UnityEvent();
 
         [FoldoutGroup("Switch Events")]
-        [SerializeField] private UnityEvent _onDeselected = new UnityEvent();
+        [SerializeField] private UnityEvent _onSwitchedOff = new UnityEvent();
 
         [FoldoutGroup("Switch Events")]
-        [SerializeField] private UnityEvent<bool> _onSelectionChangedEvent = new UnityEvent<bool>();
+        [SerializeField] private UnityEvent<bool> _onSwitchChanged = new UnityEvent<bool>();
 
-        /// <summary>Inspector-wirable event fired when the button becomes selected.</summary>
-        public UnityEvent OnSelectedEvent => _onSelected;
+        /// <summary>Inspector-wirable event fired when the button switches on.</summary>
+        public UnityEvent OnSwitchedOnEvent => _onSwitchedOn;
 
-        /// <summary>Inspector-wirable event fired when the button becomes deselected.</summary>
-        public UnityEvent OnDeselectedEvent => _onDeselected;
+        /// <summary>Inspector-wirable event fired when the button switches off.</summary>
+        public UnityEvent OnSwitchedOffEvent => _onSwitchedOff;
 
-        /// <summary>Inspector-wirable event fired on every selection change (true = selected).</summary>
-        public UnityEvent<bool> OnSelectionChangedEvent => _onSelectionChangedEvent;
+        /// <summary>Inspector-wirable event fired on every switch change (true = on).</summary>
+        public UnityEvent<bool> OnSwitchChangedEvent => _onSwitchChanged;
 
-        /// <summary>C# event fired on every selection change (true = selected).</summary>
-        public event Action<bool> OnSelectionValueChanged;
+        /// <summary>C# event fired on every switch change (true = on).</summary>
+        public event Action<bool> OnSwitchValueChanged;
 
         // ──────────────────────────── State ───────────────────────────────
 
         [ShowInInspector(RuntimeOnly = true)]
-        public bool IsSelected { get; private set; }
+        public bool IsOn { get; private set; }
 
         // ──────────────────────────── API ─────────────────────────────────
 
-        public void SetIsSelected(bool selected)
+        public void SetIsOn(bool on)
         {
-            if (IsSelected == selected)
+            if (IsOn == on)
                 return;
 
-            IsSelected = selected;
+            IsOn = on;
 
-            if (IsSelected)
+            if (IsOn)
             {
-                if (_objToToggleOnSelection != null)
-                    _objToToggleOnSelection.SetActive(true);
+                if (_objToToggleOnSwitch != null)
+                    _objToToggleOnSwitch.SetActive(true);
 
-                _onSelected?.Invoke();
+                _onSwitchedOn?.Invoke();
             }
             else
             {
-                _onDeselected?.Invoke();
+                _onSwitchedOff?.Invoke();
 
-                if (_objToToggleOnSelection != null)
-                    _objToToggleOnSelection.SetActive(false);
+                if (_objToToggleOnSwitch != null)
+                    _objToToggleOnSwitch.SetActive(false);
             }
 
-            SelectionValueChanged();
+            SwitchValueChanged();
         }
 
         /// <summary>
-        /// Called after IsSelected changes. Override to add custom logic in subclasses.
+        /// Called after IsOn changes. Override to add custom logic in subclasses.
         /// </summary>
-        protected virtual void SelectionValueChanged()
+        protected virtual void SwitchValueChanged()
         {
-            OnSelectionValueChanged?.Invoke(IsSelected);
-            _onSelectionChangedEvent?.Invoke(IsSelected);
+            OnSwitchValueChanged?.Invoke(IsOn);
+            _onSwitchChanged?.Invoke(IsOn);
         }
 
         protected override void OnBtnClick()
@@ -91,7 +91,7 @@ namespace AnkleBreaker.Utils.UIBasics
             base.OnBtnClick();
 
             if (_switchOnClick)
-                SetIsSelected(!IsSelected);
+                SetIsOn(!IsOn);
         }
     }
 }
