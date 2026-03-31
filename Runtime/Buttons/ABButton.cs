@@ -45,6 +45,8 @@ namespace AnkleBreaker.Utils.UIBasics
             base.DoStateTransition(state, instant);
 
             ESelectionState newState = (ESelectionState)state;
+            if (prev == newState) return;
+
             PrevState = prev;
             OnStateChanged?.Invoke(prev, newState);
             InvokeStateEvent(newState);
