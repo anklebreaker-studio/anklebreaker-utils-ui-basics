@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using AnkleBreaker.Utils.Inspector;
 
@@ -16,7 +17,10 @@ namespace AnkleBreaker.Utils.UIBasics
         [SerializeField] private UnityEvent _onNormal = new UnityEvent();
 
         [FoldoutGroup("ABButton - Events")]
-        [SerializeField] private UnityEvent _onHighlighted = new UnityEvent();
+        [SerializeField] private UnityEvent _onHover = new UnityEvent();
+
+        [FoldoutGroup("ABButton - Events")]
+        [SerializeField] private UnityEvent _onUnhover = new UnityEvent();
 
         [FoldoutGroup("ABButton - Events")]
         [SerializeField] private UnityEvent _onPressed = new UnityEvent();
@@ -37,7 +41,29 @@ namespace AnkleBreaker.Utils.UIBasics
         /// <summary>The current selection state.</summary>
         [ShowInInspector(RuntimeOnly = true)]
         public ESelectionState CurrentState => _currentState;
-        private ESelectionState _currentState = ESelectionState.Normal; 
+        private ESelectionState _currentState = ESelectionState.Normal;
+
+        /// <summary>True when the pointer is over this button, independent of selection state.</summary>
+        [ShowInInspector(RuntimeOnly = true)]
+        public bool IsHovered { get; private set; }
+
+        // ──────────────────────────── Hover Tracking ──────────────────────
+
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            base.OnPointerEnter(eventData);
+            IsHovered = true;
+            _onHover?.Invoke();
+        }
+
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            base.OnPointerExit(eventData);
+            IsHovered = false;
+            _onUnhover?.Invoke();
+        }
+
+        // ──────────────────────────── State Transitions ───────────────────
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
@@ -57,7 +83,7 @@ namespace AnkleBreaker.Utils.UIBasics
             switch (state)
             {
                 case ESelectionState.Normal:      _onNormal?.Invoke(); break;
-                case ESelectionState.Highlighted:  _onHighlighted?.Invoke(); break;
+                case ESelectionState.Highlighted:  break; // Hover tracked independently via OnPointerEnter/Exit
                 case ESelectionState.Pressed:      _onPressed?.Invoke(); break;
                 case ESelectionState.Selected:     _onSelected?.Invoke(); break;
                 case ESelectionState.Disabled:     _onDisabled?.Invoke(); break;
