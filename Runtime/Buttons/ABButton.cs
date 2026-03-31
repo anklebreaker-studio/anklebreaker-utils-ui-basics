@@ -44,6 +44,9 @@ namespace AnkleBreaker.Utils.UIBasics
         [ShowInInspector(RuntimeOnly = true)]
         public bool IsHovered { get; private set; }
 
+        /// <summary>C# event fired on hover change (true = entered, false = exited).</summary>
+        public event Action<bool> OnHoveredChanged;
+
         // ──────────────────────────── Hover Tracking ──────────────────────
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -51,6 +54,7 @@ namespace AnkleBreaker.Utils.UIBasics
             base.OnPointerEnter(eventData);
             IsHovered = true;
             _onHover?.Invoke();
+            OnHoveredChanged?.Invoke(true);
         }
 
         public override void OnPointerExit(PointerEventData eventData)
@@ -58,6 +62,7 @@ namespace AnkleBreaker.Utils.UIBasics
             base.OnPointerExit(eventData);
             IsHovered = false;
             _onUnhover?.Invoke();
+            OnHoveredChanged?.Invoke(false);
         }
 
         // ──────────────────────────── State Transitions ───────────────────
