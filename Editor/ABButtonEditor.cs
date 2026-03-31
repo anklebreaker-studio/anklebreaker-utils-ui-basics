@@ -58,6 +58,8 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             while (prop.NextVisible(false));
         }
 
+        public override bool RequiresConstantRepaint() => Application.isPlaying;
+
         private const string ButtonFoldoutTitle = "Unity Button";
         private const FoldoutGroupStyle ButtonFoldoutStyle = FoldoutGroupStyle.CenterLine;
 
