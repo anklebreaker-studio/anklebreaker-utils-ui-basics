@@ -179,6 +179,18 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
                         continue;
                 }
 
+                // Hide _onSelected when Navigation is None (Selected state unreachable)
+                if (entry.Property.name == "_onSelected")
+                {
+                    var nav = serializedObject.FindProperty("m_Navigation");
+                    if (nav != null)
+                    {
+                        var mode = nav.FindPropertyRelative("m_Mode");
+                        if (mode != null && mode.intValue == (int)UnityEngine.UI.Navigation.Mode.None)
+                            continue;
+                    }
+                }
+
                 // PropertyField handles DecoratorDrawers (SectionHeader, etc.) automatically
                 EditorGUILayout.PropertyField(entry.Property, true);
             }

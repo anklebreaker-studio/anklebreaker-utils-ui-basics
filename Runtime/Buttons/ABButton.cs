@@ -30,8 +30,6 @@ namespace AnkleBreaker.Utils.UIBasics
         /// <summary>C# event fired on every state transition (prevState, newState).</summary>
         public event Action<ESelectionState, ESelectionState> OnStateChanged;
 
-        private ESelectionState _currentState = ESelectionState.Normal;
-
         /// <summary>The selection state before the last transition.</summary>
         [ShowInInspector(RuntimeOnly = true)]
         public ESelectionState PrevState { get; private set; }
@@ -39,6 +37,7 @@ namespace AnkleBreaker.Utils.UIBasics
         /// <summary>The current selection state.</summary>
         [ShowInInspector(RuntimeOnly = true)]
         public ESelectionState CurrentState => _currentState;
+        private ESelectionState _currentState = ESelectionState.Normal; 
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
@@ -69,6 +68,14 @@ namespace AnkleBreaker.Utils.UIBasics
         /// Called on button click. Override in subclasses to add behavior.
         /// </summary>
         protected virtual void OnBtnClick() { }
+
+#if UNITY_EDITOR
+        protected override void Reset()
+        {
+            base.Reset();
+            navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
+        }
+#endif
 
         protected override void Awake()
         {
