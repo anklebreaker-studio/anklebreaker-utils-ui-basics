@@ -40,12 +40,14 @@ namespace AnkleBreaker.Utils.UIBasics
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
+            ESelectionState prev = CurrentState;
+
             base.DoStateTransition(state, instant);
 
             ESelectionState newState = (ESelectionState)state;
-            OnStateChanged?.Invoke(PrevState, newState);
+            PrevState = prev;
+            OnStateChanged?.Invoke(prev, newState);
             InvokeStateEvent(newState);
-            PrevState = newState;
         }
 
         private void InvokeStateEvent(ESelectionState state)
