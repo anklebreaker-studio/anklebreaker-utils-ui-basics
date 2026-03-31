@@ -15,12 +15,12 @@ namespace AnkleBreaker.Utils.UIBasics
         // ──────────────────────────── Settings ────────────────────────────
 
         [SectionHeader("UISwitchButton")]
-        [SerializeField] private bool _switchOnClick = true;
-        public bool SwitchOnClick { get => _switchOnClick; set => _switchOnClick = value; }
-
         [SerializeField, LabelText("Toggle Object")]
         [ABToolTip("Optional GameObject activated when on, deactivated when off.")]
         private GameObject _objToToggleOnSwitch;
+
+        [SerializeField, ToggleButton] private bool _switchOnClick = true;
+        public bool SwitchOnClick { get => _switchOnClick; set => _switchOnClick = value; }
 
         // ──────────────────────────── Events ──────────────────────────────
 
@@ -49,6 +49,22 @@ namespace AnkleBreaker.Utils.UIBasics
 
         [ShowInInspector(RuntimeOnly = true)]
         public bool IsOn { get; private set; }
+
+        // ──────────────────────────── Unity Callbacks ─────────────────────
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Called when the component is first added or reset in the inspector.
+        /// Auto-assigns _objToToggleOnSwitch to a child named "Display", or this GameObject.
+        /// </summary>
+        protected override void Reset()
+        {
+            base.Reset();
+
+            Transform display = transform.Find("Display");
+            _objToToggleOnSwitch = display != null ? display.gameObject : gameObject;
+        }
+#endif
 
         // ──────────────────────────── API ─────────────────────────────────
 
