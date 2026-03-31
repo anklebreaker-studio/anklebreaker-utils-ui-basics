@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UI;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
 using AnkleBreaker.Utils.Inspector;
 using AnkleBreaker.Utils.Inspector.Editor;
 
@@ -43,6 +45,21 @@ namespace AnkleBreaker.Utils.UIBasics.Editor
             _buttonMethods = ButtonDrawerUtility.CollectButtonMethods(target);
             _showInInspectorEntries = CollectShowInInspector(target);
             CacheCustomProperties();
+            CollapseHelperComponents();
+        }
+
+        /// <summary>
+        /// Collapse Image and CanvasRenderer components in the inspector
+        /// since they are only used for raycasting and don't need to be visible.
+        /// </summary>
+        private void CollapseHelperComponents()
+        {
+            var go = ((ABButton)target).gameObject;
+            foreach (var component in go.GetComponents<Component>())
+            {
+                if (component is Image || component is CanvasRenderer)
+                    InternalEditorUtility.SetIsInspectorExpanded(component, false);
+            }
         }
 
         private void CacheCustomProperties()
