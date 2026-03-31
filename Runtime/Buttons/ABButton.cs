@@ -102,6 +102,16 @@ namespace AnkleBreaker.Utils.UIBasics
         {
             base.Reset();
             navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
+            transition = Transition.None;
+
+            // Ensure an Image exists for raycasting (invisible by default)
+            if (!TryGetComponent<Image>(out var img))
+                img = gameObject.AddComponent<Image>();
+
+            img.sprite = null;
+            img.color = new Color(1f, 1f, 1f, 0f);
+            img.raycastTarget = true;
+            targetGraphic = img;
         }
 #endif
 
