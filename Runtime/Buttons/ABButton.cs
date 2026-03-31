@@ -69,14 +69,6 @@ namespace AnkleBreaker.Utils.UIBasics
         /// </summary>
         protected virtual void OnBtnClick() { }
 
-#if UNITY_EDITOR
-        protected override void Reset()
-        {
-            base.Reset();
-            navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
-        }
-#endif
-
         protected override void Awake()
         {
             base.Awake();
