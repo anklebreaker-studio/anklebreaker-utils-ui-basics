@@ -1,6 +1,6 @@
 {
   "name": "com.anklebreaker-studio.utils.ui-basics",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "displayName": "AnkleBreaker Studio - Utils UI Basics",
   "description": "Reusable UI Toolkit components, USS utilities, and UI helpers for rapid Unity UI development. Part of the AnkleBreaker Utils split.",
   "unity": "2022.3",

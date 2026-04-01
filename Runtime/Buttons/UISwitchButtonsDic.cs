@@ -14,13 +14,14 @@ namespace AnkleBreaker.Utils.UIBasics
         public K SelectedKey { get; private set; }
         public bool NoneSelected { get; private set; } = true;
         public bool IsInitialized { get; private set; }
+        public bool UnselectOnClick { get; set; }
 
         public Action<K> OnSelectionChanged { get; set; }
         public Action<K> OnSwitchClick { get; set; }
 
         private readonly Dictionary<K, UnityAction> _clickDelegates = new Dictionary<K, UnityAction>();
 
-        public void Init(K defaultKey = default)
+        public void Init(K defaultKey = default, bool unselectOnClick = false)
         {
             if (IsInitialized)
                 Reset();
@@ -28,6 +29,7 @@ namespace AnkleBreaker.Utils.UIBasics
             DefaultKey = defaultKey;
             SelectedKey = defaultKey;
             NoneSelected = false;
+            UnselectOnClick = unselectOnClick;
             IsInitialized = true;
 
             foreach (KeyValuePair<K, V> kvp in this)
@@ -35,7 +37,7 @@ namespace AnkleBreaker.Utils.UIBasics
                 if (kvp.Value != null)
                 {
                     K key = kvp.Key;
-                    UnityAction clickDelegate = () => OnSwitchClick?.Invoke(key);
+                    UnityAction clickDelegate = () => HandleClick(key);
                     _clickDelegates[key] = clickDelegate;
 
                     kvp.Value.onClick.AddListener(clickDelegate);
@@ -43,6 +45,24 @@ namespace AnkleBreaker.Utils.UIBasics
                 }
 
                 kvp.Value.SetIsOn(kvp.Key.Equals(DefaultKey));
+            }
+        }
+
+        private void HandleClick(K key)
+        {
+            OnSwitchClick?.Invoke(key);
+
+            if (TryGetValue(key, out V sw) == false)
+                return;
+
+            if (sw.IsOn)
+            {
+                if (UnselectOnClick)
+                    ClearSelection();
+            }
+            else
+            {
+                Select(key);
             }
         }
 

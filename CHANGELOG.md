@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0] - 2026-04-01
+
+### Added
+- `UnselectOnClick` property and Init parameter — when true, clicking the selected button clears the selection
+- Auto-selection on click via internal `HandleClick` — buttons now manage selection automatically, no manual `Select()` call needed from consumer
+- New tests: Click auto-selection, UnselectOnClick true/false, OnSwitchClick callback, Reset state, double Init listener guard (14 tests total)
+
 ## [0.3.0] - 2026-04-01
 
 ### Changed (Breaking)
@@ -23,7 +30,7 @@
 ## [0.2.0] - 2026-04-01
 
 ### Added
-- UISwitchButtonsDic<K, V> — generic switch-button dictionary for UISwitchButton collections (Init, SelectTab, CloseAllTab, OnSelectionChanged, OnSwitchClick)
+- UISwitchButtonsDic<K, V> — generic switch-button dictionary for UISwitchButton collections
 - Unit tests for UISwitchButtonsDic (7 tests covering Init, SelectTab, CloseAllTab, callbacks)
 - Test assembly definition (AnkleBreaker.Utils.UIBasics.Tests)
 
