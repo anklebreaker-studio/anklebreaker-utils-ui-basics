@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.1] - 2026-04-04
+
+### Fixed
+- Add `AB_UTILS_INSPECTOR` versionDefine and defineConstraint to Runtime, Editor and Tests asmdef to prevent compilation errors when Utils Inspector package is not yet resolved
+- Remove empty Tests/Editor folder
+
 ## [0.4.0] - 2026-04-01
 
 ### Added
