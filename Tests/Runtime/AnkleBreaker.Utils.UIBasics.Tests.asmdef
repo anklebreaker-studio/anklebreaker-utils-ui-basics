@@ -16,8 +16,15 @@
     ],
     "autoReferenced": false,
     "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
+        "UNITY_INCLUDE_TESTS",
+        "AB_UTILS_INSPECTOR"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.anklebreaker-studio.utils.inspector",
+            "expression": "",
+            "define": "AB_UTILS_INSPECTOR"
+        }
+    ],
     "noEngineReferences": false
 }

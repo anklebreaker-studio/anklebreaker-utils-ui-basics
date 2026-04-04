@@ -14,7 +14,15 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "defineConstraints": [
+        "AB_UTILS_INSPECTOR"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.anklebreaker-studio.utils.inspector",
+            "expression": "",
+            "define": "AB_UTILS_INSPECTOR"
+        }
+    ],
     "noEngineReferences": false
 }
